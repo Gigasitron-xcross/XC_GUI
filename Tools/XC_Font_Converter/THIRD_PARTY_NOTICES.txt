@@ -1,0 +1,12 @@
+FreeType Notice
+
+Gigasitron Font Converter uses FreeType for font loading and glyph rendering.
+
+FreeType is used under the FreeType License (FTL).
+FreeType is copyright (c) The FreeType Project.
+
+Gigasitron does not claim ownership of FreeType.
+FreeType remains the property of its respective authors and contributors.
+
+Important:
+FreeType is only a font rendering/conversion engine. It does not grant users the right to use any third-party font file. Users are responsible for ensuring that the fonts they convert are legally licensed for their intended use.

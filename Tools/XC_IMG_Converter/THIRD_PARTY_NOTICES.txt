@@ -1,9 +1,0 @@
-Third-Party Notices
-
-This software uses Krypton Toolkit / ComponentFactory.Krypton.
-
-Krypton Toolkit is licensed under the BSD-3-Clause license.
-Copyright belongs to the Krypton Toolkit contributors and Component Factory Pty Ltd.
-
-Gigasitron does not claim ownership of Krypton Toolkit or ComponentFactory.Krypton.
-All third-party components remain the property of their respective owners.

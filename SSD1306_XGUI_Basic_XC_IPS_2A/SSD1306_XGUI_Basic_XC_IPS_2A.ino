@@ -8,7 +8,7 @@
 #define TFT_CS   PB13
 #define TFT_DC   PE8
 #define TFT_RST  PE6
-#define TFT_BL   PE0
+#define TFT_BL   PD4
 
 // For 240x320 ST7789
 #define TFT_WIDTH   240
@@ -66,7 +66,7 @@ public:
 
         clear(XC_Black);
         setPenWidth(1);
-         setFont( &FONT_FjallaOne48 );
+        setFont( &FONT_FjallaOne48 );
         setFontBackColorEnable(0);
         printString( buf, XC_White, 1 , 10 );
 
@@ -148,22 +148,24 @@ bool xcGuiTimerCallback(struct repeating_timer *t)
 
 void setup()
 {
-    //Serial.begin(115200);
+    Serial.begin(115200);
     SPI.setMOSI(PB15);
-SPI.setMISO(PB14);
-SPI.setSCLK(PD3);
+    SPI.setMISO(PC2);
+    SPI.setSCLK(PD3);
     lcd.begin();
     lcd.setRotation(0);
     lcd.setBacklight(true);
+    lcd.setOffset(lcd.offset(), 0); // Apply LCD Pixel offset from manufacturer
     
-
+    Serial.println(lcd.controllerId());
     gui.attachDriver(&lcd);
 
     if (!gui.begin(guiBuffer, sizeof(guiBuffer), TFT_WIDTH, TFT_HEIGHT))
     {
-        //Serial.println("GUI begin failed");
+        Serial.println("GUI begin failed");
         while (1) {}
     }
+    digitalWrite(TFT_BL, HIGH);
 #if defined(ARDUINO_ARCH_STM32)
     MyTimer = new HardwareTimer(TIM2);
     MyTimer->setOverflow(100, HERTZ_FORMAT);

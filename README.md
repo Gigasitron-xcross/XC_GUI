@@ -282,7 +282,7 @@ These drivers are intended for Gigasitron-designed LCD modules. A third-party di
 
 Fonts use the public `XC_FONT` structure. The examples include `FONT_FjallaOne48.c` as a sketch-local font file.
 
-A free Gigasitron Font Converter will be provided in this GitHub repository(https://github.com/Gigasitron-xcross/XC_GUI-Tools.git). You can use it to convert your own fonts into the `XC_FONT` format used by XC_GUI.
+A free Gigasitron Font Converter will be provided in this GitHub repository. You can use it to convert your own fonts into the `XC_FONT` format used by XC_GUI.
 
 Please make sure you only convert fonts that you have the right to use. For most projects, it is recommended to use Google Fonts or other open-source fonts with a clear license that allows your intended use.
 
@@ -303,7 +303,7 @@ gui.printString("123", XC_White, 1, 10);
 
 XC_GUI supports bitmap drawing through `drawBitmap()`.
 
-A free `XC_IMG_Converter` will also be provided in this GitHub repository (https://github.com/Gigasitron-xcross/XC_GUI-Tools.git). You can use it to convert your own image files into the XC_GUI image format for use in Arduino sketches.
+A free `XC_IMG_Converter` will also be provided in this GitHub repository. You can use it to convert your own image files into the XC_GUI image format for use in Arduino sketches.
 
 Please make sure you only convert images that you own, created yourself, purchased with the correct license, or are otherwise legally allowed to use in your project.
 

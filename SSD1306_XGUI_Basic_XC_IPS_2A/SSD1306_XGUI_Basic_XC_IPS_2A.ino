@@ -36,6 +36,7 @@ static char buf[32];
 extern const XC_FONT g_sFontCalibri10;
 extern const XC_FONT g_FontOpenSansLight48;
 extern const XC_FONT FONT_FjallaOne48;
+extern const uint16_t bmpgiga_splash[];
 
 class MyGUI : public XC_GUI
 {
@@ -65,6 +66,7 @@ public:
 	
 
         clear(XC_Black);
+        drawBitmap( bmpgiga_splash, 0, 0 );
         setPenWidth(1);
         setFont( &FONT_FjallaOne48 );
         setFontBackColorEnable(0);
@@ -159,7 +161,7 @@ void setup()
     
     Serial.println(lcd.controllerId());
     gui.attachDriver(&lcd);
-
+    gui.set16BitPerPixel(false);
     if (!gui.begin(guiBuffer, sizeof(guiBuffer), TFT_WIDTH, TFT_HEIGHT))
     {
         Serial.println("GUI begin failed");

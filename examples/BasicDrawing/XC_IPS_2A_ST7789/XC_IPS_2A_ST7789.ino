@@ -32,11 +32,12 @@ static double				g_nCount = 0;
 static int8_t				g_nMove	 = 0;
 static int8_t               dir      = 1;
 static char buf[32];
-
+static char                 g_bLcd240x320 = false;
 extern const XC_FONT g_sFontCalibri10;
 extern const XC_FONT g_FontOpenSansLight48;
 extern const XC_FONT FONT_FjallaOne48;
 extern const uint16_t bmpgiga_splash[];
+extern const uint16_t bmpGIGA_240x320[];
 
 class MyGUI : public XC_GUI
 {
@@ -66,7 +67,15 @@ public:
 	
 
         clear(XC_Black);
-        drawBitmap( bmpgiga_splash, 0, 60 );
+        if(true == g_bLcd240x320)
+        {
+            drawBitmap( bmpGIGA_240x320, 0, 0 );
+        }
+        else
+        {
+            drawBitmap( bmpgiga_splash, 0, 60 );
+        }
+
         setPenWidth(1);
         setFont( &FONT_FjallaOne48 );
         setFontBackColorEnable(0);
@@ -158,7 +167,10 @@ void setup()
     lcd.setRotation(0);
     lcd.setBacklight(true);
     lcd.setOffset(lcd.offset(), 0); // Apply LCD Pixel offset from manufacturer
-    
+    if((lcd.width()*lcd.height()) >= (240*230) )
+    {
+        g_bLcd240x320 = true;
+    }
     Serial.println(lcd.controllerId());
     gui.attachDriver(&lcd);
     gui.set16BitPerPixel(false);

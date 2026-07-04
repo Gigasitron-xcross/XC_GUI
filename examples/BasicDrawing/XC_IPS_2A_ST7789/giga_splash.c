@@ -2,9 +2,9 @@
 bmp to c converter by Gigasitron
 bug report: inquiry@gigasitron.com
 ********************************************************************************
-source BMP        : C:\Users\admin\Downloads\240x172_splash.jpg
+source BMP        : 240x172_splash.jpg
 source pixel dept : 16
-target name       : C:\Users\admin\Downloads\giga_splash.c
+target name       : giga_splash.c
 target pixel dept : 16
 target width      : 172
 target height     : 240

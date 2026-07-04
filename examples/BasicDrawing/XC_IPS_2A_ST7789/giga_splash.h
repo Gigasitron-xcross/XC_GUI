@@ -9,7 +9,7 @@ bug report: inquiry@gigasitron.com
 extern "C" {
 #endif
 
-extern const uint16_t 240x172_splash[];
+extern const uint16_t bmpgiga_splash[];
 
 #ifdef __cplusplus
 }

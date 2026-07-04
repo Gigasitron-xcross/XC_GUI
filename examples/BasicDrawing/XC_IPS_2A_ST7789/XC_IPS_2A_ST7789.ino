@@ -66,15 +66,15 @@ public:
 	
 
         clear(XC_Black);
-        drawBitmap( bmpgiga_splash, 0, 0 );
+        drawBitmap( bmpgiga_splash, 0, 60 );
         setPenWidth(1);
         setFont( &FONT_FjallaOne48 );
         setFontBackColorEnable(0);
-        printString( buf, XC_White, 1 , 10 );
+        printString( buf, XC_White, 8 , 10 );
 
-        drawRect(0, 0, 127, 63, XC_White);
-        drawCircle(64,32,1+g_nMove, XC_White);
-        fillCircle(100,32,1+g_nMove, XC_White);
+        drawRect(8, 8, 172-8, 72, XC_White);
+        drawCircle(77,37,1+g_nMove, XC_White);
+        fillCircle(120,37,1+g_nMove, XC_White);
         //drawLine(0, 0, 127, 63, XC_White);
         //drawLine(127, 0, 0, 63, XC_White);
         //printString("SSD1306", XC_White, 10, 24);

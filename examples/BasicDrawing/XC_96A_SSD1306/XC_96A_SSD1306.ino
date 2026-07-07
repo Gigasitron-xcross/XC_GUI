@@ -5,14 +5,14 @@
 
 /* Arduino Wire uses 7-bit address. If old C driver used 0x78, use 0x3C here. */
 XC_Display_SSD1306 oled(Wire, 0x3C, 128, 64);
-static double				g_nCount = 0;
-static int8_t				g_nMove	 = 0;
-static int8_t               dir      = 1;
-static char buf[32];
+static double			g_nCount = 0;
+static int				g_nMove	 = 0;
+static int              dir      = 1;
+static char             buf[32];
 
-extern const XC_FONT g_sFontCalibri10;
-extern const XC_FONT g_FontOpenSansLight48;
-extern const XC_FONT FONT_FjallaOne48;
+extern const XC_FONT    g_sFontCalibri10;
+extern const XC_FONT    g_FontOpenSansLight48;
+extern const XC_FONT    FONT_FjallaOne48;
 
 class MyGUI : public XC_GUI
 {
@@ -40,7 +40,6 @@ public:
             }
         }
 	
-
         clear(XC_Black);
         setPenWidth(1);
          setFont( &FONT_FjallaOne48 );
@@ -50,9 +49,6 @@ public:
         drawRect(0, 0, 127, 63, XC_White);
         drawCircle(64,32,1+g_nMove, XC_White);
         fillCircle(100,32,1+g_nMove, XC_White);
-        //drawLine(0, 0, 127, 63, XC_White);
-        //drawLine(127, 0, 0, 63, XC_White);
-        //printString("SSD1306", XC_White, 10, 24);
     }
 };
 
@@ -60,10 +56,7 @@ MyGUI gui;
 
 /* Small XGUI temp buffer. Latest SSD1306 driver uses native full-screen buffer internally. */
 uint8_t guiBuffer[1024];  // 1 SSD1306 page = 128 bytes = 8 rows
-#define LCD_TICK_MS 100
-
 static volatile bool g_bLcdTick = false;
-static volatile int g_bLcdTickCount = LCD_TICK_MS;
 
 #if defined(ARDUINO_ARCH_STM32)
 static HardwareTimer *MyTimer = nullptr;
@@ -119,8 +112,6 @@ bool xcGuiTimerCallback(struct repeating_timer *t)
     g_bLcdTick = true;
     return true;   // keep repeating
 }
-
-
 #endif
 
 void setup()
@@ -145,18 +136,19 @@ void setup()
         Serial.println("GUI begin failed.Make sure you use the LCD from Gigasitron.com");
         while (1) {}
     }
-#if defined(ARDUINO_ARCH_STM32)
-    MyTimer = new HardwareTimer(TIM2);
-    MyTimer->setOverflow(50, HERTZ_FORMAT);
-    MyTimer->attachInterrupt(onTimer);
-    MyTimer->resume();
-#elif defined(ARDUINO_ARCH_AVR)
 
-    XC_Timer_Init();
+    #if defined(ARDUINO_ARCH_STM32)
+        MyTimer = new HardwareTimer(TIM2);
+        MyTimer->setOverflow(50, HERTZ_FORMAT);
+        MyTimer->attachInterrupt(onTimer);
+        MyTimer->resume();
+    #elif defined(ARDUINO_ARCH_AVR)
 
-#elif defined(ARDUINO_ARCH_RP2040)
-    add_repeating_timer_ms(50, xcGuiTimerCallback, nullptr, &guiTimer);
-#endif
+        XC_Timer_Init();
+
+    #elif defined(ARDUINO_ARCH_RP2040)
+        add_repeating_timer_ms(50, xcGuiTimerCallback, nullptr, &guiTimer);
+    #endif
 }
 
 void loop()
@@ -166,6 +158,5 @@ void loop()
          
         g_bLcdTick = false;
         gui.drawExecute();
-       
     }
 }

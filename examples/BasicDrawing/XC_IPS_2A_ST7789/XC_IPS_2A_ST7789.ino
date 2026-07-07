@@ -3,12 +3,28 @@
 #include "XC_GUI.h"
 #include "XC_Display_ST7789.h"
 
+#if defined (ARDUINO_ARCH_RP2040)
+    #define TFT_MISO  16
+    #define TFT_CS    17
+    #define TFT_SCK   18
+    #define TFT_MOSI  19
+    #define TFT_DC    20
+    #define TFT_RST   21
+    #define TFT_BL    22
+    #define SPI_SPEED 25000000UL
+#endif
 
+#if defined(ARDUINO_ARCH_STM32)
 // ST7789 pins
-#define TFT_CS   PB13
-#define TFT_DC   PE8
-#define TFT_RST  PE6
-#define TFT_BL   PD4
+    #define TFT_CS   PB13
+    #define TFT_DC   PE8
+    #define TFT_RST  PE6
+    #define TFT_BL   PD4
+    #define TFT_MISO  PC2
+    #define TFT_SCK   PD3
+    #define TFT_MOSI  PB15
+    #define SPI_SPEED 25000000UL
+#endif
 
 // For 240x320 ST7789
 #define TFT_WIDTH   240
@@ -22,17 +38,17 @@ XC_Display_ST7789 lcd(
     TFT_BL,
     TFT_WIDTH,
     TFT_HEIGHT,
-    25000000UL,   // SPI clock
+    SPI_SPEED,   // SPI clock
     0,            // x offset
     0             // y offset
 );
 
 
-static double				g_nCount = 0;
-static int8_t				g_nMove	 = 0;
-static int8_t               dir      = 1;
-static char buf[32];
-static char                 g_bLcd240x320 = false;
+static double		 g_nCount = 0;
+static int		     g_nMove	 = 0;
+static int           dir      = 1;
+static char          buf[32];
+static char          g_bLcd240x320 = false;
 extern const XC_FONT g_sFontCalibri10;
 extern const XC_FONT g_FontOpenSansLight48;
 extern const XC_FONT FONT_FjallaOne48;
@@ -84,16 +100,13 @@ public:
         drawRect(8, 8, 172-8, 72, XC_White);
         drawCircle(77,37,1+g_nMove, XC_White);
         fillCircle(120,37,1+g_nMove, XC_White);
-        //drawLine(0, 0, 127, 63, XC_White);
-        //drawLine(127, 0, 0, 63, XC_White);
-        //printString("SSD1306", XC_White, 10, 24);
     }
 };
 
 MyGUI gui;
 
-/* Small XGUI temp buffer. Latest SSD1306 driver uses native full-screen buffer internally. */
-uint8_t guiBuffer[4096*3];  // 1 SSD1306 page = 128 bytes = 8 rows
+/* Small XGUI temp buffer.*/
+uint8_t guiBuffer[4096*4]; 
 #define LCD_TICK_MS 100
 
 static volatile bool g_bLcdTick = false;
@@ -153,24 +166,39 @@ bool xcGuiTimerCallback(struct repeating_timer *t)
     g_bLcdTick = true;
     return true;   // keep repeating
 }
-
-
 #endif
 
 void setup()
 {
     Serial.begin(115200);
-    SPI.setMOSI(PB15);
-    SPI.setMISO(PC2);
-    SPI.setSCLK(PD3);
+
+    // SPI PINS
+    #if defined (ARDUINO_ARCH_RP2040)
+    pinMode(25, OUTPUT); // pico LED
+    SPI.setTX(TFT_MOSI); //MOSI
+    SPI.setRX(TFT_MISO);
+    SPI.setSCK(TFT_SCK);
+    #endif
+
+    #if defined(ARDUINO_ARCH_STM32)
+    SPI.setMOSI(TFT_MOSI);
+    SPI.setMISO(TFT_MISO);
+    SPI.setSCLK(TFT_SCK);
+    #endif
+
+    // Start LCD initialization.
     lcd.begin();
     lcd.setRotation(0);
     lcd.setBacklight(true);
-    lcd.setOffset(lcd.offset(), 0); // Apply LCD Pixel offset from manufacturer
+
+    // Apply LCD Pixel offset from manufacturer. It is stored in Gigasitron LCD that can be read out
+    lcd.setOffset(lcd.offset(), 0); 
+
     if((lcd.width()*lcd.height()) >= (240*230) )
     {
         g_bLcd240x320 = true;
     }
+
     Serial.println(lcd.controllerId());
     gui.attachDriver(&lcd);
     gui.set16BitPerPixel(false);
@@ -179,7 +207,7 @@ void setup()
         Serial.println("GUI begin failed");
         while (1) {}
     }
-    digitalWrite(TFT_BL, HIGH);
+
 #if defined(ARDUINO_ARCH_STM32)
     MyTimer = new HardwareTimer(TIM2);
     MyTimer->setOverflow(100, HERTZ_FORMAT);
@@ -190,17 +218,24 @@ void setup()
     XC_Timer_Init();
 
 #elif defined(ARDUINO_ARCH_RP2040)
-    add_repeating_timer_ms(50, xcGuiTimerCallback, nullptr, &guiTimer);
+    add_repeating_timer_ms(10, xcGuiTimerCallback, nullptr, &guiTimer);
+    digitalWrite(25, HIGH);
 #endif
+    // Turn on backlite
+    digitalWrite(TFT_BL, HIGH);
 }
 
 void loop()
 {
     if(0 != g_bLcdTick)
     {
-         
         g_bLcdTick = false;
+
+        //Execute GUI periodically
         gui.drawExecute();
-       
+
+        #if defined(ARDUINO_ARCH_RP2040)
+            digitalWrite(25, !digitalRead(25));
+        #endif
     }
 }

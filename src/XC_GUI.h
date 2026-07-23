@@ -74,6 +74,42 @@ public:
 
     void drawBitmap(const void *bmp, int x, int y);
 
+    void drawPolygon(const GUI_POINT *points, int count, bool fill, XC_COLOR color);
+
+    void drawRotatedPolygon(const GUI_POINT *points,
+                            int count,
+                            int cx,
+                            int cy,
+                            float angleDeg,
+                            bool fill,
+                            XC_COLOR color);
+
+    void drawRotatedPolygonAt(const GUI_POINT *points,
+                              int count,
+                              int posX,
+                              int posY,
+                              float angleDeg,
+                              bool fill,
+                              XC_COLOR color);
+
+    void drawBitmapRotatedAt(const void *bmp,
+                             int centerX,
+                             int centerY,
+                             float angleDeg,
+                             uint16_t *tempRaw = nullptr,
+                             uint32_t tempPixelCount = 0);
+
+    void drawBitmapRotatedTransparentAt(const void *bmp,
+                                        int nPosX,
+                                        int nPosY,
+                                        int nPivotX,
+                                        int nPivotY,
+                                        float angleDeg,
+                                        uint16_t transparentColor,
+                                        uint8_t tolerance = 0,
+                                        uint16_t *tempRaw = nullptr,
+                                        uint32_t tempPixelCount = 0);
+
 #ifdef __FF_EN
     void drawBitmapFile(char *path, int x, int y);
 #endif

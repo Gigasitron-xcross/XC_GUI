@@ -21,6 +21,12 @@ typedef enum
     XC_PIXEL_MONO1  = 1
 } XC_PIXEL_FORMAT;
 
+typedef struct
+{
+    int16_t x;
+    int16_t y;
+} GUI_POINT;
+
 /*
  * XC_COLOR values must stay in the same order as XGUI_COLOR in GUI/XGUI.h.
  * XC_GUI.cpp casts XC_COLOR to XGUI_COLOR internally.
